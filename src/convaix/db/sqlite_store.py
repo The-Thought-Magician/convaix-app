@@ -193,9 +193,11 @@ class SqliteStore:
         q = "SELECT convaix_id, conv_id, title, source, author, published_at, turn_count FROM snapshots"
         params, conds = [], []
         if source:
-            conds.append("source = ?"); params.append(source)
+            conds.append("source = ?")
+            params.append(source)
         if author:
-            conds.append("author = ?"); params.append(author)
+            conds.append("author = ?")
+            params.append(author)
         if conds:
             q += " WHERE " + " AND ".join(conds)
         q += " ORDER BY published_at DESC LIMIT ?"
@@ -249,7 +251,8 @@ class SqliteStore:
         params = [pat, pat]
         sf = ""
         if source:
-            sf = "AND s.source = ?"; params.append(source)
+            sf = "AND s.source = ?"
+            params.append(source)
         params.append(limit)
         rows = self._conn.execute(
             f"""SELECT c.role, c.chunk_text, s.title, s.source, s.convaix_id, 1.0 AS similarity
@@ -287,7 +290,8 @@ class SqliteStore:
         params = [pat, pat]
         sf = ""
         if source:
-            sf = "AND s.source = ?"; params.append(source)
+            sf = "AND s.source = ?"
+            params.append(source)
         params.append(limit)
         rows = self._conn.execute(
             f"""SELECT s.title, s.source, s.convaix_id, COUNT(*) AS hits, s.turn_count

@@ -78,7 +78,9 @@ def _emb_to_pg(emb: list[float]) -> str:
 class PgStore:
     def __init__(self, url: str):
         try:
-            import psycopg
+            import importlib.util
+            if importlib.util.find_spec("psycopg") is None:
+                raise ImportError("psycopg[binary] is required for Postgres: pip install 'psycopg[binary]'")
         except ImportError:
             raise ImportError("psycopg[binary] is required for Postgres: pip install 'psycopg[binary]'")
         from psycopg.rows import dict_row
@@ -195,9 +197,11 @@ class PgStore:
         q = "SELECT convaix_id, conv_id, title, source, author, published_at, turn_count FROM snapshots"
         params, conds = [], []
         if source:
-            conds.append("source = %s"); params.append(source)
+            conds.append("source = %s")
+            params.append(source)
         if author:
-            conds.append("author = %s"); params.append(author)
+            conds.append("author = %s")
+            params.append(author)
         if conds:
             q += " WHERE " + " AND ".join(conds)
         q += " ORDER BY published_at DESC LIMIT %s"

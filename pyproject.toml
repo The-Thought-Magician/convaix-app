@@ -21,11 +21,6 @@ embeddings = [
     "sentence-transformers>=2.7",
     "torch>=2.0",
 ]
-embeddings-mlx = [
-    "mlx-embedding-models>=0.1.0",
-    "transformers>=4.40,<5",
-    "einops",
-]
 web = [
     "fastapi>=0.104",
     "uvicorn[standard]>=0.24",

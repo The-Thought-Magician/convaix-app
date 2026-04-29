@@ -2,7 +2,6 @@
 
 import json
 from fastapi import APIRouter, HTTPException, Request
-from fastapi.responses import JSONResponse
 
 router = APIRouter()
 
