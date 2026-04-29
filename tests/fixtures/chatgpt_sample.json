@@ -1,0 +1,50 @@
+[
+  {
+    "id": "chatgpt-conv-001",
+    "title": "Python async patterns",
+    "create_time": 1710000000.0,
+    "update_time": 1710000300.0,
+    "current_node": "node-c",
+    "mapping": {
+      "node-root": {
+        "id": "node-root",
+        "parent": null,
+        "children": ["node-a"],
+        "message": null
+      },
+      "node-a": {
+        "id": "node-a",
+        "parent": "node-root",
+        "children": ["node-b"],
+        "message": {
+          "id": "node-a",
+          "author": {"role": "user"},
+          "content": {"content_type": "text", "parts": ["What are the best patterns for async Python?"]},
+          "create_time": 1710000000.0
+        }
+      },
+      "node-b": {
+        "id": "node-b",
+        "parent": "node-a",
+        "children": ["node-c"],
+        "message": {
+          "id": "node-b",
+          "author": {"role": "assistant"},
+          "content": {"content_type": "text", "parts": ["Key async Python patterns:\n\n1. asyncio.gather() for concurrent tasks\n2. async context managers for resource cleanup\n3. asyncio.Queue for producer/consumer\n4. anyio for library-agnostic async code\n\nAvoid mixing sync blocking calls inside async functions — use run_in_executor for CPU-bound work."]},
+          "create_time": 1710000060.0
+        }
+      },
+      "node-c": {
+        "id": "node-c",
+        "parent": "node-b",
+        "children": [],
+        "message": {
+          "id": "node-c",
+          "author": {"role": "user"},
+          "content": {"content_type": "text", "parts": ["How does asyncio.gather differ from asyncio.create_task?"]},
+          "create_time": 1710000180.0
+        }
+      }
+    }
+  }
+]

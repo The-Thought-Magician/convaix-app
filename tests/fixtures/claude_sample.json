@@ -1,0 +1,34 @@
+[
+  {
+    "uuid": "claude-conv-001",
+    "name": "Explaining vector databases",
+    "created_at": "2024-03-15T10:00:00Z",
+    "updated_at": "2024-03-15T10:05:00Z",
+    "chat_messages": [
+      {
+        "uuid": "msg-001",
+        "sender": "human",
+        "text": "Can you explain how vector databases work and why they are useful for AI applications?",
+        "created_at": "2024-03-15T10:00:00Z"
+      },
+      {
+        "uuid": "msg-002",
+        "sender": "assistant",
+        "content": [{"type": "text", "text": "Vector databases store high-dimensional numerical representations called embeddings. Unlike traditional databases that match exact values, vector databases find semantically similar content using distance metrics like cosine similarity.\n\nThey are especially useful for AI because:\n1. Semantic search — find documents by meaning, not keywords\n2. Recommendation systems — find similar items\n3. RAG (Retrieval-Augmented Generation) — give LLMs relevant context"}],
+        "created_at": "2024-03-15T10:01:00Z"
+      },
+      {
+        "uuid": "msg-003",
+        "sender": "human",
+        "text": "What is the difference between pgvector and sqlite-vec?",
+        "created_at": "2024-03-15T10:03:00Z"
+      },
+      {
+        "uuid": "msg-004",
+        "sender": "assistant",
+        "text": "pgvector is a PostgreSQL extension — great for production, supports HNSW indexes, concurrent writes, and integrates with your existing PG stack.\n\nsqlite-vec is a SQLite extension — great for embedded/desktop apps, zero server setup, works in-process. Perfect for a local-first app.",
+        "created_at": "2024-03-15T10:04:00Z"
+      }
+    ]
+  }
+]

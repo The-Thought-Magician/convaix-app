@@ -1,0 +1,18 @@
+[
+  {
+    "title": "How do I use embeddings for search?",
+    "time": "2024-04-01T09:00:00Z",
+    "details": [
+      {"name": "User Prompt", "value": "How do I use embeddings for search?"},
+      {"name": "Response", "value": "Embeddings map text to vectors. To use them for search: embed your documents at index time, embed the query at search time, then find nearest neighbours using cosine similarity or dot product."}
+    ]
+  },
+  {
+    "title": "Follow-up on HNSW",
+    "time": "2024-04-01T09:05:00Z",
+    "details": [
+      {"name": "User Prompt", "value": "What is HNSW and when should I use it?"},
+      {"name": "Response", "value": "HNSW (Hierarchical Navigable Small World) is a graph-based ANN index. Use it when you need fast approximate nearest neighbour search at scale — it trades a small accuracy loss for much faster query times compared to exhaustive search."}
+    ]
+  }
+]
