@@ -11,8 +11,10 @@ def get_embedder(prefer: str | None = None):
     if pref in ("mlx", "auto"):
         try:
             from .mlx_nomic import MlxNomic
-            return MlxNomic()
-        except ImportError:
+            embedder = MlxNomic()
+            embedder.encode_query("test")  # Verify mlx_embedding_models is available
+            return embedder
+        except (ImportError, ModuleNotFoundError):
             if pref == "mlx":
                 raise
     from .sentence_tf import SentenceTfNomic
