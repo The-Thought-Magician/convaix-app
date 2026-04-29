@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "convaix"
+version = "0.2.0"
+description = "AI conversation exchange — import, store, search, and chat over conversations from Claude, ChatGPT, and Gemini"
+requires-python = ">=3.10"
+
+dependencies = [
+    "click>=8.0",
+    "rich>=13.0",
+    "sqlite-vec>=0.1.1",
+    "beautifulsoup4>=4.12",
+    "lxml>=4.9",
+]
+
+[project.optional-dependencies]
+embeddings = [
+    "sentence-transformers>=2.7",
+    "torch>=2.0",
+]
+embeddings-mlx = [
+    "mlx-embedding-models>=0.1.0",
+    "transformers>=4.40,<5",
+    "einops",
+]
+web = [
+    "fastapi>=0.104",
+    "uvicorn[standard]>=0.24",
+    "jinja2>=3.1",
+    "python-multipart>=0.0.6",
+    "httpx>=0.25",
+]
+pg = [
+    "psycopg[binary]>=3.1",
+]
+rag = [
+    "requests>=2.31",
+]
+all = [
+    "convaix[embeddings,web,pg,rag]",
+]
+dev = [
+    "pytest>=7",
+    "pytest-asyncio>=0.21",
+]
+
+[project.scripts]
+convaix = "convaix.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+markers = [
+    "slow: tests that load ML models",
+    "pg: tests that require a live Postgres",
+]
+asyncio_mode = "auto"
