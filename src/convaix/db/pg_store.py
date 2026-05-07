@@ -240,20 +240,26 @@ class PgStore:
     # ------------------------------------------------------------------ #
 
     def search_chunks(self, query: str, *, source=None, limit=10, mode="hybrid") -> list[dict]:
+        import os
+        _sem_w = float(os.getenv("CONVAIX_SEMANTIC_WEIGHT", "0.5"))
+        _kw_w = 1.0 - _sem_w
         results = {}
 
         if mode in ("keyword", "hybrid"):
             for r in self._kw_search(query, source, limit):
                 key = (r["convaix_id"], r["chunk_text"][:100])
+                r["similarity"] = r["similarity"] * _kw_w
                 results[key] = {**r, "match_type": "kw"}
 
         if mode in ("semantic", "hybrid"):
             for r in self._vec_search(query, source, limit):
                 key = (r["convaix_id"], r["chunk_text"][:100])
+                sem_score = r["similarity"] * _sem_w
                 if key in results:
                     results[key]["match_type"] = "both"
-                    results[key]["similarity"] = max(results[key]["similarity"], r["similarity"])
+                    results[key]["similarity"] = results[key]["similarity"] + sem_score
                 else:
+                    r["similarity"] = sem_score
                     results[key] = {**r, "match_type": "sem"}
 
         return sorted(results.values(), key=lambda r: r["similarity"], reverse=True)[:limit]

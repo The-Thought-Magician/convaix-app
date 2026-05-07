@@ -87,6 +87,18 @@ def test_chatgpt_does_not_detect_claude():
     assert not p.detect(FIXTURES / "gemini_sample.json")
 
 
+def test_idempotency():
+    from convaix.providers.claude import ClaudeParser
+    from convaix.schema import add_convaix_extension
+    parser = ClaudeParser()
+    convs1 = list(parser.parse(FIXTURES / "claude_sample.json"))
+    convs2 = list(parser.parse(FIXTURES / "claude_sample.json"))
+    assert len(convs1) == len(convs2)
+    for c1, c2 in zip(convs1, convs2):
+        # conv_id is deterministic (hash of source+source_id); convaix_id is UUID so compare conv_id
+        assert c1["conversation"]["id"] == c2["conversation"]["id"]
+
+
 def test_gemini_parse_turns():
     from convaix.providers.gemini import GeminiParser
     convs = list(GeminiParser().parse(FIXTURES / "gemini_sample.json"))

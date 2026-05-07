@@ -40,7 +40,41 @@ class RagEngine:
         prompt = self._build_prompt(query, context)
 
         t1 = time.time()
-        answer = self.ollama.generate(prompt)
+        if not self.ollama.is_available():
+            import os
+            llm_backend = os.getenv("CONVAIX_LLM", "").lower()
+            if llm_backend == "anthropic":
+                try:
+                    import anthropic
+                    client = anthropic.Anthropic()
+                    msg = client.messages.create(
+                        model="claude-3-haiku-20240307",
+                        max_tokens=2048,
+                        messages=[{"role": "user", "content": prompt}],
+                    )
+                    answer = msg.content[0].text
+                except Exception as e:
+                    answer = f"[Anthropic error: {e}]"
+            elif llm_backend == "openai":
+                try:
+                    import openai
+                    client = openai.OpenAI()
+                    resp = client.chat.completions.create(
+                        model="gpt-4o-mini",
+                        messages=[{"role": "user", "content": prompt}],
+                        max_tokens=2048,
+                    )
+                    answer = resp.choices[0].message.content
+                except Exception as e:
+                    answer = f"[OpenAI error: {e}]"
+            else:
+                return {
+                    "answer": "No LLM available. Set CONVAIX_LLM=anthropic or start Ollama.",
+                    "sources": [],
+                    "total_ms": 0,
+                }
+        else:
+            answer = self.ollama.generate(prompt)
         generation_ms = int((time.time() - t1) * 1000)
 
         if discussion_id:

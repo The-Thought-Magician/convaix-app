@@ -14,7 +14,29 @@ def _store(request: Request):
 def health(request: Request):
     from ..rag.ollama import OllamaClient
     ollama = OllamaClient()
-    return {"status": "ok", "ollama": ollama.is_available()}
+    store = _store(request)
+    store_type = type(store).__name__.lower().replace("store", "")
+    try:
+        from ..embeddings import get_embedder
+        emb = get_embedder()
+        embedder_type = type(emb).__name__.lower()
+    except Exception:
+        embedder_type = "none"
+    return {"status": "ok", "ollama": ollama.is_available(), "store_type": store_type, "embedder_type": embedder_type}
+
+
+@router.get("/conv/{conv_id}/history")
+def conv_history(conv_id: str, request: Request):
+    store = _store(request)
+    history = store.get_snapshot_history(conv_id)
+    return [
+        {
+            "version": i + 1,
+            "created_at": snap.get("created_at"),
+            "turn_count": snap.get("turn_count", 0),
+        }
+        for i, snap in enumerate(history)
+    ]
 
 
 @router.get("/snapshots")
