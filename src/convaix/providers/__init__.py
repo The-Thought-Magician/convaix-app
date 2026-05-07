@@ -1,4 +1,10 @@
-"""Provider registry — maps provider names to parser instances."""
+"""Provider registry — maps provider names to parser instances.
+
+The order parsers are tried in detect_parser() matters: more specific parsers
+must come first. For example, Claude's export format is distinct enough to
+identify before falling through to the more generic Gemini heuristic. Always
+register the most specific (least ambiguous) parsers at the top of PARSERS.
+"""
 
 from pathlib import Path
 

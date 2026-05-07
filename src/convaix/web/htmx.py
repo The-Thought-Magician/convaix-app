@@ -1,5 +1,6 @@
 """HTMX HTML fragment endpoints."""
 
+import html
 import json
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
@@ -26,11 +27,9 @@ def _store(request: Request):
 def index(request: Request, source: str = None, page: int = 1):
     store = _store(request)
     limit = 50
-    snapshots = store.list_snapshots(source=source, limit=limit)
-    sources = store.list_snapshots(limit=10000)
-    source_counts: dict = {}
-    for r in sources:
-        source_counts[r["source"]] = source_counts.get(r["source"], 0) + 1
+    offset = (page - 1) * limit
+    snapshots = store.list_snapshots(source=source, limit=limit, offset=offset)
+    source_counts: dict = store.get_source_counts()
 
     rows_html = ""
     for s in snapshots:
@@ -50,6 +49,11 @@ def index(request: Request, source: str = None, page: int = 1):
         sidebar += f'<li><a href="/htmx/?source={src}" style="color:{color}">{label} ({cnt})</a></li>'
     sidebar += "</ul>"
 
+    source_param = f"&source={source}" if source else ""
+    prev_link = f'<a href="?page={page-1}{source_param}">Prev</a>' if page > 1 else '<span style="color:#aaa">Prev</span>'
+    next_link = f'<a href="?page={page+1}{source_param}">Next</a>'
+    pagination = f'<div style="margin-top:12px;display:flex;gap:16px">{prev_link} {next_link}</div>'
+
     return HTMLResponse(_layout(f"""
     <div style="display:flex;gap:24px">
       <aside style="width:160px;flex-shrink:0">{sidebar}</aside>
@@ -67,6 +71,7 @@ def index(request: Request, source: str = None, page: int = 1):
           </tr></thead>
           <tbody>{rows_html}</tbody>
         </table>
+        {pagination}
       </main>
     </div>
     """, title="convaix — your conversations"))
@@ -88,7 +93,7 @@ def conversation(convaix_id: str, request: Request):
     turns_html = ""
     for t in turns:
         role = t.get("role", "user")
-        content = t.get("content", "").replace("<", "&lt;").replace(">", "&gt;")
+        content = html.escape(t.get("content", ""))
         content = content.replace("\n", "<br>")
         bg = "#e3f2fd" if role == "user" else "#f5f5f5"
         turns_html += f"""

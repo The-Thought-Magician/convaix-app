@@ -160,12 +160,12 @@ class PgStore:
         with self._conn() as conn:
             for row in chunk_rows:
                 try:
-                    conn.execute(
+                    cur = conn.execute(
                         "INSERT INTO chunks (convaix_id,turn_number,chunk_number,role,chunk_text,content_hash) "
                         "VALUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",
                         row,
                     )
-                    stored += 1
+                    stored += cur.rowcount
                 except Exception as e:
                     logger.debug("Chunk insert skipped (convaix_id=%s turn=%s chunk=%s): %s", row[0], row[1], row[2], e)
 
@@ -193,7 +193,14 @@ class PgStore:
 
     # ------------------------------------------------------------------ #
 
-    def list_snapshots(self, *, source=None, author=None, limit=1000) -> list[dict]:
+    def get_source_counts(self) -> dict:
+        with self._conn() as conn:
+            rows = conn.execute(
+                "SELECT source, COUNT(*) as cnt FROM snapshots GROUP BY source"
+            ).fetchall()
+        return {r["source"]: r["cnt"] for r in rows}
+
+    def list_snapshots(self, *, source=None, author=None, limit=1000, offset=0) -> list[dict]:
         q = "SELECT convaix_id, conv_id, title, source, author, published_at, turn_count FROM snapshots"
         params, conds = [], []
         if source:
@@ -204,8 +211,9 @@ class PgStore:
             params.append(author)
         if conds:
             q += " WHERE " + " AND ".join(conds)
-        q += " ORDER BY published_at DESC LIMIT %s"
+        q += " ORDER BY published_at DESC LIMIT %s OFFSET %s"
         params.append(limit)
+        params.append(offset)
         with self._conn() as conn:
             return list(conn.execute(q, params).fetchall())
 

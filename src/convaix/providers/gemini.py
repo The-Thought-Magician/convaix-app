@@ -114,14 +114,17 @@ class GeminiParser:
     def detect(self, path: Path) -> bool:
         name = path.name.lower()
         if name == "myactivity.json":
+            logger.warning("Gemini HTML exports may omit assistant responses — check raw file")
             return True
         if name == "myactivity.html":
+            logger.warning("Gemini HTML exports may omit assistant responses — check raw file")
             return True
         if path.suffix == ".json":
             try:
                 with open(path) as f:
                     data = json.load(f)
                 if isinstance(data, list) and data and "title" in data[0] and "time" in data[0]:
+                    logger.warning("Gemini HTML exports may omit assistant responses — check raw file")
                     return True
             except Exception as e:
                 logger.debug("Gemini detect: could not read %s: %s", path, e)

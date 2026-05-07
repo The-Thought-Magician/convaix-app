@@ -11,12 +11,14 @@ requires-python = ">=3.11"
 dependencies = [
     "click>=8.0",
     "rich>=13.0",
-    "sqlite-vec>=0.1.1",
     "beautifulsoup4>=4.12",
     "lxml>=4.9",
 ]
 
 [project.optional-dependencies]
+vector = [
+    "sqlite-vec>=0.1.1",
+]
 embeddings = [
     "sentence-transformers>=2.7",
     "torch>=2.0",
@@ -36,7 +38,7 @@ rag = [
     "requests>=2.31",
 ]
 all = [
-    "convaix[embeddings,web,pg,rag]",
+    "convaix[vector,embeddings,web,pg,rag]",
 ]
 dev = [
     "pytest>=7",

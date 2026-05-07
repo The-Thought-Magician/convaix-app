@@ -189,7 +189,13 @@ class SqliteStore:
 
     # ------------------------------------------------------------------ #
 
-    def list_snapshots(self, *, source=None, author=None, limit=1000) -> list[dict]:
+    def get_source_counts(self) -> dict:
+        rows = self._conn.execute(
+            "SELECT source, COUNT(*) as cnt FROM snapshots GROUP BY source"
+        ).fetchall()
+        return {r["source"]: r["cnt"] for r in rows}
+
+    def list_snapshots(self, *, source=None, author=None, limit=1000, offset=0) -> list[dict]:
         q = "SELECT convaix_id, conv_id, title, source, author, published_at, turn_count FROM snapshots"
         params, conds = [], []
         if source:
@@ -200,8 +206,9 @@ class SqliteStore:
             params.append(author)
         if conds:
             q += " WHERE " + " AND ".join(conds)
-        q += " ORDER BY published_at DESC LIMIT ?"
+        q += " ORDER BY published_at DESC LIMIT ? OFFSET ?"
         params.append(limit)
+        params.append(offset)
         return [dict(r) for r in self._conn.execute(q, params).fetchall()]
 
     def get_snapshot(self, convaix_id: str) -> dict | None:
