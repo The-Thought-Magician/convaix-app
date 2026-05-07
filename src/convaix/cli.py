@@ -22,7 +22,7 @@ def _maybe_nudge_star():
     if not _STAR_SENTINEL.exists():
         console.print(
             "\n[dim]⭐  If convaix is useful, a GitHub star helps others find it → "
-            "https://github.com/yourusername/convaix[/dim]\n"
+            "https://github.com/chiranjeetmishra/convaix[/dim]\n"
         )
         _STAR_SENTINEL.parent.mkdir(parents=True, exist_ok=True)
         _STAR_SENTINEL.touch()

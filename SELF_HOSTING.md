@@ -7,7 +7,7 @@ convaix is fully self-hostable. All core features — import, search, RAG, and t
 **Prerequisites:** Python 3.11+, [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
 ```bash
-git clone https://github.com/yourusername/convaix.git
+git clone https://github.com/chiranjeetmishra/convaix.git
 cd convaix
 uv sync
 uv run convaix --help

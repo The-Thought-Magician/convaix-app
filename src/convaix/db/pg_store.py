@@ -166,8 +166,8 @@ class PgStore:
                         row,
                     )
                     stored += 1
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug("Chunk insert skipped (convaix_id=%s turn=%s chunk=%s): %s", row[0], row[1], row[2], e)
 
         if not skip_embeddings and stored > 0:
             self._embed_chunks(convaix_id, title, chunk_rows)

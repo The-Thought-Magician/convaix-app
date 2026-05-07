@@ -123,8 +123,8 @@ class GeminiParser:
                     data = json.load(f)
                 if isinstance(data, list) and data and "title" in data[0] and "time" in data[0]:
                     return True
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug("Gemini detect: could not read %s: %s", path, e)
         return False
 
     def parse(self, path: Path) -> Iterator[dict]:
