@@ -1,5 +1,10 @@
 # convaix
 
+[![CI](https://github.com/yourusername/convaix/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/convaix/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+
 **Your AI conversations, unified.** Import conversations from Claude, ChatGPT, and Gemini into a single searchable corpus with semantic search and RAG.
 
 ## Overview

@@ -15,10 +15,26 @@ logger = logging.getLogger(__name__)
 DEFAULT_DB = os.getenv("CONVAIX_DB", f"sqlite://{Path.home()}/.convaix/convaix.db")
 
 
+_STAR_SENTINEL = Path.home() / ".convaix" / ".starred_nudge"
+
+
+def _maybe_nudge_star():
+    if not _STAR_SENTINEL.exists():
+        console.print(
+            "\n[dim]⭐  If convaix is useful, a GitHub star helps others find it → "
+            "https://github.com/yourusername/convaix[/dim]\n"
+        )
+        _STAR_SENTINEL.parent.mkdir(parents=True, exist_ok=True)
+        _STAR_SENTINEL.touch()
+
+
 @click.group()
 @click.version_option(package_name="convaix")
-def main():
+@click.pass_context
+def main(ctx):
     """convaix — import, search, and chat over AI conversations."""
+    if ctx.invoked_subcommand == "import":
+        _maybe_nudge_star()
 
 
 # ── import ──────────────────────────────────────────────────────────────────
