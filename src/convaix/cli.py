@@ -54,6 +54,8 @@ def import_cmd(provider, path, db, author, skip_embeddings):
 
     p = Path(path)
     parser = detect_parser(p) if provider == "auto" else get_parser(provider)
+    if parser is None:
+        raise click.UsageError(f"Could not detect provider for {path}. Specify it explicitly: claude, chatgpt, gemini.")
     store = get_store(db)
 
     loaded = skipped = errors = 0
@@ -121,11 +123,12 @@ def load(path, db, skip_embeddings):
 @main.command("list")
 @click.option("--db", default=DEFAULT_DB, envvar="CONVAIX_DB")
 @click.option("--source", "-s")
-def list_cmd(db, source):
+@click.option("--limit", "-l", default=100, type=int)
+def list_cmd(db, source, limit):
     """List imported conversations."""
     from .db import get_store
     store = get_store(db)
-    rows = store.list_snapshots(source=source)
+    rows = store.list_snapshots(source=source, limit=limit)
     store.close()
     if not rows:
         console.print("[yellow]No conversations found.[/yellow]")

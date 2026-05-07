@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "convaix"
 version = "0.2.0"
 description = "AI conversation exchange — import, store, search, and chat over conversations from Claude, ChatGPT, and Gemini"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 
 dependencies = [
     "click>=8.0",
@@ -30,6 +30,7 @@ web = [
 ]
 pg = [
     "psycopg[binary]>=3.1",
+    "psycopg-pool>=3.1",
 ]
 rag = [
     "requests>=2.31",
